@@ -22,18 +22,22 @@ module.exports = async function (context, req) {
         // "Shreya, Emily, Fifi, Beau, Evelyn, Julia, Daniel, Fardeen"
         var names = ["Shreya", "Emily", "Fifi", "Beau", "Evelyn", "Julia", "Daniel", "Fardeen"]
         // general a random number
-        let random_value = Math.floor(names.length * Math.random())
-        let resultname = names[random_value] // get the name
+        var random_value = Math.floor(names.length * Math.random())
+        var resultname = names[random_value] // get the name
         return resultname
     }
 
+    var firstcat = await getCatPic();
+    var secondcat = await getCatPic();
+    var name1 = getNames();
+    var name2 = getNames();
 
     context.res = {
         // status: 200, /* Defaults to 200 */
         body: { 
-            cat1: getCatPic(),
-            cat2: getCatPic(), 
-            names: [getNames(), getNames()] 
+            cat1: firstcat,
+            cat2: secondcat,
+            names: [name1, name2]
         }
     };
 }
