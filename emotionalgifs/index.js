@@ -15,10 +15,14 @@ module.exports = async function (context, req) {
 
     let result = await analyzeImage(parts[0].data);
 
+    let emotions = result[0].faceAttributes.emotion;
+    let objects = Object.values(emotions);
+    const main_emotion = Object.keys(emotions).find(key => emotions[key] === Math.max(...objects));
+
     context.res = {
         // status: 200, /* Defaults to 200 */
         body: {
-            result
+            main_emotion
         }
     };
     console.log(result);
@@ -28,8 +32,10 @@ module.exports = async function (context, req) {
 
 
 async function analyzeImage(img){
-    const subscriptionKey = process.env.SUBSCRIPTIONKEY;
-    const uriBase = process.env.ENDPOINT + '/face/v1.0/detect';
+    // const subscriptionKey = process.env.SUBSCRIPTIONKEY;
+    // const uriBase = process.env.ENDPOINT + '/face/v1.0/detect';
+    const subscriptionKey = 'f5d7cea6525d43ac9e47db93cc0e71d7';
+    const uriBase = 'https://melodysfaceapi.cognitiveservices.azure.com/' + '/face/v1.0/detect';
 
     let params = new URLSearchParams({
         'returnFaceId': 'true',
