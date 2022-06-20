@@ -28,10 +28,8 @@ module.exports = async function (context, req) {
 
 
 async function analyzeImage(img){
-    // const subscriptionKey = process.env.SUBSCRIPTIONKEY;
-    const subscriptionKey = 'f5d7cea6525d43ac9e47db93cc0e71d7';
-    // const uriBase = process.env.ENDPOINT + '/face/v1.0/detect';
-    const uriBase = 'https://melodysfaceapi.cognitiveservices.azure.com/' + '/face/v1.0/detect';
+    const subscriptionKey = process.env.SUBSCRIPTIONKEY;
+    const uriBase = process.env.ENDPOINT + '/face/v1.0/detect';
 
     let params = new URLSearchParams({
         'returnFaceId': 'true',
