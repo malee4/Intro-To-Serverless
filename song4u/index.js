@@ -18,53 +18,56 @@ module.exports = async function (context, req) {
 
     const data = await resp.arrayBuffer();
 
-    const result = await analyzeImage(data, context);
+    const result = await analyzeImage(data);
 
     // context.log(result);
 
-    const age = result[0].faceAttributes.age;
+    let age = result[0].faceAttributes.age
 
     let id = "";
 
     if (age > 5 && age < 25) {
-        id = "GenZ";
+        id = "GenZ"
     } else if (age > 24 && age < 41) {
-        id = "GenY";
+        id = "GenY"
     } else if (age > 40 && age < 57) {
-        id = "GenX";
+        id = "GenX"
     } else if (age > 56 && age < 76) {
-        id = "BabyBoomers";
+        id = "BabyBoomers"
     } else {
-        id = "Unknown";
+        id = "Unknown"
     }
 
     context.log(id);
 
     context.res = {
         // first item of media that is texted
-        body: id
+        body: id,
     };
 };
 
-async function analyzeImage(img, context) {
+async function analyzeImage(img) {
     // local_settings.json
     const KEY = process.env["FACE_API_KEY"];
-    const URI_BASE = process.env["FACE_API_URI"] + 'face/v1.0/detect';
+    const URI_BASE =  process.env["FACE_API_URI"] + "/face/v1.0/detect";
+
+    context.log(URI_BASE)
 
     const params = new URLSearchParams({
         returnFaceId: "true",
-        returnFaceAttributes: "age",
-    });
+        returnFaceAttributes: "age"
+    })
 
-    const resp = await fetch(URI_BASE + "?" + params.toString(), 
-    {
-        method: "POST",
+    const resp = await fetch(URI_BASE + '?' + params.toString(), {
+        method: 'POST',
         body: img,
         headers: {
-            "Content-Type" : "application/octet-stream",
-            "Ocp-Apim-Subscription-Key": KEY
+            'Content-Type' : 'application/octet-stream',
+            'Ocp-Apim-Subscription-Key': KEY
         }
-    });
+    })
 
-    const data = await resp.json();
+    let data = await resp.json();
+
+    return data;
 }
