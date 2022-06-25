@@ -49,11 +49,11 @@ module.exports = async function (context, req) {
 async function analyzeImage(img, context) {
     // local_settings.json
     const KEY = process.env["FACE_API_KEY"];
-    const URI_BASE = process.env["FACE_API_URI"] + '/face/v1.0/detect';
+    const URI_BASE = process.env["FACE_API_URI"] + 'face/v1.0/detect';
 
     const params = new URLSearchParams({
-        returnFaceId: 'true',
-        returnFaceAttributes: 'age'
+        returnFaceId: "true",
+        returnFaceAttributes: "age",
     });
 
     const resp = await fetch(URI_BASE + "?" + params.toString(), 
@@ -61,8 +61,8 @@ async function analyzeImage(img, context) {
         method: "POST",
         body: img,
         headers: {
-            'Content-Type' : 'application/octet-stream',
-            'Ocp-Apim-Subscription-Key': KEY
+            "Content-Type" : "application/octet-stream",
+            "Ocp-Apim-Subscription-Key": KEY
         }
     });
 
