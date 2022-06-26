@@ -10,7 +10,8 @@ module.exports = async function (context, req) {
 
     // testing purposes
     const url = queryObject.MediaUrl0;
-    // context.log(url);
+    
+    context.log(url);
 
     const resp = await fetch(url, {
         method: "GET",
@@ -42,7 +43,7 @@ module.exports = async function (context, req) {
 
     context.res = {
         // first item of media that is texted
-        body: id,
+        body: url
     };
 };
 
