@@ -52,7 +52,7 @@ async function analyzeImage(img) {
     const KEY = process.env["FACE_API_KEY"];
     const URI_BASE =  process.env["FACE_API_URI"] + "/face/v1.0/detect";
 
-    context.log(URI_BASE)
+    // context.log(URI_BASE)
 
     const params = new URLSearchParams({
         returnFaceId: "true",
