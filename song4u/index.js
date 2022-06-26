@@ -43,7 +43,7 @@ module.exports = async function (context, req) {
 
     context.res = {
         // first item of media that is texted
-        body: url
+        body: id
     };
 };
 
