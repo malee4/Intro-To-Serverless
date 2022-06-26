@@ -49,8 +49,8 @@ module.exports = async function (context, req) {
 
 async function analyzeImage(img) {
     // local_settings.json
-    const KEY = "2b46dc89f4624d6ba01b0b629dd94ad0";
-    const URI_BASE = new URL("/face/v1.0/detect", "https://placeholdeer-face-api.cognitiveservices.azure.com");
+    const KEY = process.env["FACE_API_KEY"];
+    const URI_BASE = new URL("/face/v1.0/detect", process.env["FACE_API_URI"]);
 
     // context.log(URI_BASE)
 
