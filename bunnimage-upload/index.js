@@ -5,28 +5,41 @@ const { BlobServiceClient } = require("@azure/storage-blob");
 module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
 
-
     const boundary = multipart.getBoundary(req.headers['content-type']);
     const body = req.body;
-    // actual data 
-    const parsedBody = multipart.Parse(body, boundary);
 
-    // first, determine your file extension
-    let filetype = parsedBody[0].type;
-    let ext;
-    if (filetype == "image/png") {
+    var responseMessage = "";
+
+    // catch cases where an empty POST request is passed
+    try {
+        // actual data 
+        const parsedBody = multipart.Parse(body, boundary);
+
+        // first, determine your file extension
+        let filetype = parsedBody[0].type;
+        let ext;
+        if (filetype == "image/png") {
         ext = "png";
-    } else if (filetype == "image/jpeg") {
-        ext = "jpeg";
-    } else if (filetype == "image/jpg") {
-        ext = "jpg";
-    } else {
-        username = "invalidimage"
-        ext = "";
-    }
+        } else if (filetype == "image/jpeg") {
+            ext = "jpeg";
+        } else if (filetype == "image/jpg") {
+            ext = "jpg";
+        } else {
+            username = "invalidimage"
+            ext = "";
+        }
 
-    // call the uploadFile function
-    let responseMessage = await uploadFile(parsedBody, ext);
+        // get info from headers
+        let fileName = req.headers['codename'];
+
+        // call the uploadFile function
+        responseMessage = await uploadFile(parsedBody, ext, fileName);
+
+    } catch(err) {
+        context.log(err);
+        context.log("Undefined body image");
+        responseMessage = "Sorry! No image attached."
+    }
     
     context.res = {
         // status: 200, /* Defaults to 200 */
@@ -35,7 +48,7 @@ module.exports = async function (context, req) {
 }
 
 // background function, sends file over
-async function uploadFile(parsedBody, ext) {
+async function uploadFile(parsedBody, ext, fileName) {
     // "reference to the container"
     // gets the opening to interact with cleint
     const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
@@ -44,7 +57,7 @@ async function uploadFile(parsedBody, ext) {
     const containerClient = blobServiceClient.getContainerClient(containerName);    // Get a reference to a container
 
     // create the blob
-    const blobName = 'test.' + ext;    // ext = extension
+    const blobName = `${filename}.${ext}`;    // ext = extension
     const blockBlobClient = containerClient.getBlockBlobClient(blobName); // Get a block blob client
 
     // upload the file
