@@ -13,10 +13,13 @@ module.exports = async function (context, myTimer) {
     for await (const blob of blobContainerClient.listBlobsFlat()) {
         context.log(`Deleting blob name ${blob.name}`);
 
-        // using the deleteBlob method
+        // using the deleteBlob method, blob.name accesses the blob's name
         await blobContainerClient.deleteBlob(blob.name);
     }
 
     // alert user of successful completion of for-loop
     context.log("Deleted all files from the container.");
 };
+
+// cron expression
+// 23 6 * * *
