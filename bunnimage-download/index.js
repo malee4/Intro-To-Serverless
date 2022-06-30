@@ -28,6 +28,7 @@ module.exports = async function (context, req) {
      let jpgdata = await jpgresp;
 
      // return whether link exists
+     // does this logic not account for if both png and jpg exist?
      if (pngdata.statusText == "The specified blob does not exist." && jpgdata.statusText == "The specified blob does not exist." ) {
         success = false;
         context.log("Does not exist: " + pngdata)
@@ -51,5 +52,5 @@ module.exports = async function (context, req) {
     };
 
     context.log(donwload);
-    context.done();
+    context.done(); // purpose of context.done?
 }
