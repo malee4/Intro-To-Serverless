@@ -51,6 +51,6 @@ module.exports = async function (context, req) {
         }
     };
 
-    context.log(donwload);
+    context.log(download);
     context.done(); // purpose of context.done?
 }
