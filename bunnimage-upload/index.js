@@ -6,17 +6,22 @@ module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
 
     var boundary = multipart.getBoundary(req.headers['content-type']);
-    var body = req.body;
-
+    context.log("getting request")
+    var body = req.body; // let's say it returns a FormData object
+    var bodyType = typeof body;
     var responseMessage = "";
+
+    var parsedBody = "hello";
 
     // catch cases where an empty POST request is passed
     try {
         // actual data 
-        const parsedBody = multipart.Parse(body, boundary);
+        parsedBody = multipart.Parse(body, boundary);
+        context.log("successfully parsed body")
 
         // first, determine your file extension
         let filetype = parsedBody[0].type;
+        context.log("successfully got body type")
         let ext;
         if (filetype == "image/png") {
         ext = "png";
