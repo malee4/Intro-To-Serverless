@@ -7,7 +7,8 @@ module.exports = async function (context, req) {
 
     var boundary = multipart.getBoundary(req.headers['content-type']);
     context.log("getting request")
-    var body = req.body; 
+    var body = req.body; // let's say it returns a FormData object
+
     var bodyType = typeof body;
     var responseMessage = "";
 

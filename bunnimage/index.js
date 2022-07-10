@@ -1,12 +1,16 @@
+
 // NOTE: THE FOLLOWING LINES OF CODE DO NOT UPLOAD FILES, THIS IS PULLED FROM THE WEEK 4 PART 3 VIDDEO at 1:11 
 const bunnForm = document.getElementById('bunnForm');
 // hello
+
 // every time someone submits the form, get value
 bunnForm.addEventListener('submit', async function (event) {
     event.preventDefault()
     const username = document.getElementById("username").value;
     console.log("Getting username:");
     console.log(username);
+
+
 
     console.log("Getting output...");
     const output = document.getElementById("output")
@@ -62,10 +66,9 @@ downloadButton.addEventListener("click", async function (event) {
     
     const data = await resp.json();
 
+
     console.log("Image has been downloaded");
     console.log(data)
 
     window.open(data.downloadUri, "_self");
 })
-
-
