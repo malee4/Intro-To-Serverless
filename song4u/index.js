@@ -8,6 +8,8 @@ module.exports = async function (context, req) {
     // parses and returns as a json object that contains actual key value pairs
     const queryObject = querystring.parse(req.body);
 
+    context.log(typeof queryObject);
+
     // testing purposes
     const url = queryObject.MediaUrl0;
     
@@ -18,6 +20,7 @@ module.exports = async function (context, req) {
     });
 
     const data = await resp.arrayBuffer();
+    context.log(typeof data);
 
     const result = await analyzeImage(data);
 

@@ -24,20 +24,25 @@ IF TIME: User "logins"
 
 ## Week 1
 
-### Basic Function Development:
+### Upload Component Development:
 
 #### Description
-- 
+- Create the store business cards Azure function
 
 #### ETA:
 > How long do you think it will take to complete this?
-- [Replace with eta]
+- 0.5 hours to complete Twilio --> Azure Function
+- 1 hour to complete Azure Function --> Form Recognizer --> Azure Function
+- 1 hour to complete Azure Function --> CosmosDB
+- 0.5 hour leeway 
 
 #### Objective:
 > Checklist of everything you need to do to complete this issue
-- [ ] [Replace with small task  1]
-- [ ] [Replace with small task  2]
-- [ ] [Replace with small task  3]
+- [ ] Take in image using the Twilio API
+- [ ] Pass image through Azure Form Recognizer, return as JSON
+- [ ] Create a function to convert the image to Base64 
+- [ ] Append Base64 to JSON
+- [ ] Store JSON in CosmosDB
 
 ## Week 2
 ### [Task Name]:
