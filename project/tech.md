@@ -24,8 +24,7 @@
 - HTML (frontend development)
 
 ### Flowchart
-
-[Replace with image of final flowchart]
+![flow chart](flow_chart.png)
 
 
 ### Relevant Links
