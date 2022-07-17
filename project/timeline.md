@@ -45,10 +45,10 @@ IF TIME: User "logins"
 - [ ] Store JSON in CosmosDB
 
 ## Week 2
-### [Task Name]:
+### Get Card Information Development:
 
 #### Description
-- [Replace with description]
+- Translation 
 
 #### ETA:
 > How long do you think it will take to complete this?
@@ -61,7 +61,7 @@ IF TIME: User "logins"
 - [ ] [Replace with small task  3]
 
 ## Week 3
-### [Task Name]:
+### Front End Development:
 
 #### Description
 - [Replace with description]
@@ -77,7 +77,7 @@ IF TIME: User "logins"
 - [ ] [Replace with small task  3]
 
 ## Week 4
-### [Task Name]:
+### Presentation Preparation and Clean-Up:
 
 #### Description
 - [Replace with description]
