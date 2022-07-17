@@ -1,5 +1,17 @@
+// const qs = require('qs');
+
+// module.exports = async function (context, req) {
+//         context.log('JavaScript HTTP trigger function processed a request.');
+//         const queryObject = qs.parse(req.body);
+//         const url = queryObject.MediaUrl0;
+    
+//         context.res = {
+//             body: url,
+//         };
+//     }
+
 const qs = require('qs');
-// const CosmosClient = require("@azure/cosmos").CosmosClient;
+const CosmosClient = require("@azure/cosmos").CosmosClient;
 const fetch = require('node-fetch');
 const { FormRecognizerClient, FormTrainingClient, AzureKeyCredential } = require("@azure/ai-form-recognizer");
 const fs = require("fs");
@@ -17,47 +29,48 @@ module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
 
     // take in image as POST
-    const card = querystring.parse(req.body);
-    const url = card.MediaUrl0; // Q: what is this returning?
-    const resp = await fetch(url, {
-        method: "GET",
-    });
+    const queryObject = qs.parse(req.body);
+    const url = queryObject.MediaUrl0; // Q: what is this returning?
+    // const resp = await fetch(url, {
+    //     method: "GET",
+    // });
 
-    const data = await resp.arrayBuffer();
+    // const data = await resp.arrayBuffer();
+
+    // const typeIs = typeof data
 
     // get card information, pass in image location --> uncertain if this works
-    let infoJSON = getInfo(url);
+    let infoJSON = await getInfo(url);
 
     // turn into base64 file
-    const cardBase64 = Buffer.from(data).toString('base64');
+    // const cardBase64 = Buffer.from(data).toString('base64');
 
     // append to json
-    infoJSON["base64"] = cardBase64;
+    // infoJSON["base64"] = cardBase64;
 
     // store json in CosmosDB 
     
 
-    let respMessage = "Thanks!";
+    // let respMessage = "Thanks!";
 
     context.res = {
-        // status: 200, /* Defaults to 200 */
-        body: respMessage
+        body: infoJSON,
     };
 }
 
 
 // get information from card using Azure Form Recognizer model
-async function getInfo(card_url) {
+async function getInfo(url) {
     const endpoint = process.env.FORM_RECOGNITION_ENDPOINT
-    const key = process.env.FORM_RECOGNITION_KEY
+    const apiKey = process.env.FORM_RECOGNITION_KEY
     
-    // call model
-    const poller = await client.beginRecognizeBusinessCardsFromUrl(card_url, {
-        onProgress: (state) => {
-            console.log(`status: ${state.status}`);
-        }
+    const client = new FormRecognizerClient(endpoint, new AzureKeyCredential(apiKey));
+    const poller = await client.beginRecognizeBusinessCardsFromUrl(url, {
+    includeFieldElements: true,
+    onProgress: (state) => {
+        console.log(`analyzing status: ${state.status}`);
+    }
     });
-
     const [businessCard] = await poller.pollUntilDone();
 
     // make sure info returned is not null
