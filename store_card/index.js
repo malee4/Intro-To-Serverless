@@ -1,71 +1,75 @@
-// const qs = require('qs');
-
-// module.exports = async function (context, req) {
-//         context.log('JavaScript HTTP trigger function processed a request.');
-//         const queryObject = qs.parse(req.body);
-//         const url = queryObject.MediaUrl0;
-    
-//         context.res = {
-//             body: url,
-//         };
-//     }
-
-const qs = require('qs');
-const CosmosClient = require("@azure/cosmos").CosmosClient;
-const fetch = require('node-fetch');
 const { FormRecognizerClient, FormTrainingClient, AzureKeyCredential } = require("@azure/ai-form-recognizer");
 const fs = require("fs");
 
-// const config = {
-//     endpoint: process.env.COSMOS_ENDPOINT,
-//     key: process.env.COSMOS_KEY,
-//     databaseId: "BusinessCardStorer",
-//     containerId: "cards",
-//     partitionKey: {kind: "Hash", paths: ["/secrets"]}
-//   };
-
+const fetch = require('node-fetch');
+const mime = require('mime-types');
+const { BlobServiceClient } = require("@azure/storage-blob");
 
 module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
+    
+    // return messages
+    let responseMessage = "";
+    let responseStatus = "200";
 
     // take in image as POST
-    const queryObject = qs.parse(req.body);
-    const url = queryObject.MediaUrl0; // Q: what is this returning?
-    // const resp = await fetch(url, {
-    //     method: "GET",
-    // });
+    const url = req.body.url;
+    const picName = req.body.picname;
 
-    // const data = await resp.arrayBuffer();
+    try {
+        // get the response from the Twilio URL
+        const response = await fetch(url);
 
-    // const typeIs = typeof data
+        // if fetch is not successful
+        if (!response.ok) {
+            throw new Error(`unexpected response ${response.statusText}`);
+        }
 
-    // get card information, pass in image location --> uncertain if this works
-    let infoJSON = await getInfo(url);
+        // get the type of file (ex. jpeg)
+        const mimeType = response.headers.get('content-type')
 
-    // turn into base64 file
-    // const cardBase64 = Buffer.from(data).toString('base64');
+        // set the file name with the file type extension appended at the end
+        const fileName = `${picName}.${mime.extension(mimeType)}`
 
-    // append to json
-    // infoJSON["base64"] = cardBase64;
+        // connect to Blob Storage
+        const blobContainerName = "businesscardstorage";
+        const blobServiceClient = await BlobServiceClient.fromConnectionString(process.env["AZURE_STORAGE_CONNECTION_STRING"]);
+        const containerClient = await blobServiceClient.getContainerClient(blobContainerName);
+        const blockBlobClient = containerClient.getBlockBlobClient(fileName);
 
-    // store json in CosmosDB 
-    
+        const uploadBlobResponse = await blockBlobClient.uploadStream(
+            response.body,
+            10 * 1024 * 1024,
+            20,
+            {
+                blobHTTPHeaders: {
+                    blobContentType: mimeType,
+                },
+            }
+        );
 
-    // let respMessage = "Thanks!";
+        responseMessage = `Status of Upload to Blob storage is: ${uploadBlobResponse._response.status}`;
+
+    }
+    catch (error) {
+        context.log(error);
+        responseMessage = error;
+        responseStatus = 500;
+    }
 
     context.res = {
-        body: infoJSON,
+        body: responseMessage,
     };
 }
 
 
 // get information from card using Azure Form Recognizer model
-async function getInfo(url) {
+async function getInfo(businessCardImage) {
     const endpoint = process.env.FORM_RECOGNITION_ENDPOINT
     const apiKey = process.env.FORM_RECOGNITION_KEY
     
     const client = new FormRecognizerClient(endpoint, new AzureKeyCredential(apiKey));
-    const poller = await client.beginRecognizeBusinessCardsFromUrl(url, {
+    const poller = await client.beginRecognizeBusinessCardsFromUrl(businessCardImage, {
     includeFieldElements: true,
     onProgress: (state) => {
         console.log(`analyzing status: ${state.status}`);
@@ -79,9 +83,4 @@ async function getInfo(url) {
     }
 
     return businessCard;
-}
-
-// upload JSON to CosmosDB
-async function upload(JSON_FILE) {
-    return NaN
 }
