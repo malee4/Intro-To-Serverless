@@ -48,70 +48,50 @@ IF TIME: User "logins"
 ### Get Card Information Development:
 
 #### Description
-- Translation 
+- Translation function
+- Google search function
 
 #### ETA:
-> How long do you think it will take to complete this?
-- [Replace with eta]
+- 4-5 hours
 
 #### Objective:
-> Checklist of everything you need to do to complete this issue
-- [ ] [Replace with small task  1]
-- [ ] [Replace with small task  2]
-- [ ] [Replace with small task  3]
+- Create function to return translation of a function
+- Create function to return top 5-10 Google search results for name and company on card
+- Create rough framework to call said functions in HTML
 
 ## Week 3
 ### Front End Development:
 
 #### Description
-- [Replace with description]
+- Create a presentable form of the HTML page
 
 #### ETA:
-> How long do you think it will take to complete this?
-- [Replace with eta]
+- 3-4 hours
 
 #### Objective:
-> Checklist of everything you need to do to complete this issue
-- [ ] [Replace with small task  1]
-- [ ] [Replace with small task  2]
-- [ ] [Replace with small task  3]
+- Use the rough framework from Week 2 to construct a functioning webpage
+- Create a function to call and display information on the cards
+- Format the HTML/make it presentable
+- Start planning for the blog post and presentation
 
 ## Week 4
 ### Presentation Preparation and Clean-Up:
 
 #### Description
-- [Replace with description]
+- Prepare for the final presentations and finalization of deliverable products for BitProject.
 
 #### ETA:
-> How long do you think it will take to complete this?
-- [Replace with eta]
+- 3-4 hours
 
 #### Objective:
-> Checklist of everything you need to do to complete this issue
-- [ ] [Replace with small task  1]
-- [ ] [Replace with small task  2]
-- [ ] [Replace with small task  3]
+- Write the blog post
+- Complete preparation for the final presentation
+- Any remaining troubleshooting
 
 
 ---
 
 <details><summary>Task Template</summary>
-<br>
-
-### [Task Name]:
-
-#### Description
-- [Replace with description]
-
-#### ETA:
-> How long do you think it will take to complete this?
-- [Replace with eta]
-
-#### Objective:
-> Checklist of everything you need to do to complete this issue
-- [ ] [Replace with small task  1]
-- [ ] [Replace with small task  2]
-- [ ] [Replace with small task  3]
 
 <br><br>
 </details>

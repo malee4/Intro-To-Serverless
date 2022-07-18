@@ -5,8 +5,6 @@ const fetch = require('node-fetch');
 const mime = require('mime-types');
 const { BlobServiceClient } = require("@azure/storage-blob");
 
-
-
 module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
     
@@ -60,18 +58,18 @@ module.exports = async function (context, req) {
     }
 
     context.res = {
-        body: infoJSON,
+        body: responseMessage,
     };
 }
 
 
 // get information from card using Azure Form Recognizer model
-async function getInfo(url) {
+async function getInfo(businessCardImage) {
     const endpoint = process.env.FORM_RECOGNITION_ENDPOINT
     const apiKey = process.env.FORM_RECOGNITION_KEY
     
     const client = new FormRecognizerClient(endpoint, new AzureKeyCredential(apiKey));
-    const poller = await client.beginRecognizeBusinessCardsFromUrl(url, {
+    const poller = await client.beginRecognizeBusinessCardsFromUrl(businessCardImage, {
     includeFieldElements: true,
     onProgress: (state) => {
         console.log(`analyzing status: ${state.status}`);
@@ -85,9 +83,4 @@ async function getInfo(url) {
     }
 
     return businessCard;
-}
-
-// upload JSON to CosmosDB
-async function upload(JSON_FILE) {
-    return NaN
 }
