@@ -5,23 +5,6 @@ const path = "/Users/melod/Desktop/cs/Intro-To-Serverless/testFormRecognizer/car
 const { FormRecognizerClient, AzureKeyCredential } = require("@azure/ai-form-recognizer");
 const fs = require("fs");
 
-
-// GENERAL FORM RECOGNIZER MODEL
-// module.exports = async function(context, req) {
-//     context.log('JavaScript HTTP trigger function processed a request.');
-
-//     const readStream = fs.createReadStream(path);
-
-//     const client = new FormRecognizerClient(endpoint, new AzureKeyCredential(apiKey));
-//     const poller = await client.beginRecognizeContent(readStream);
-//     const pages = await poller.pollUntilDone();
-
-//     context.res = {
-//         // status: 200, /* Defaults to 200 */
-//         body: pages[0]
-//     };
-// }
-
 // // BUSINESS CARD MODEL
 module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
@@ -46,3 +29,19 @@ module.exports = async function (context, req) {
         body: cards[0]
         };
 }
+
+// GENERAL FORM RECOGNIZER MODEL
+// module.exports = async function(context, req) {
+//     context.log('JavaScript HTTP trigger function processed a request.');
+
+//     const readStream = fs.createReadStream(path);
+
+//     const client = new FormRecognizerClient(endpoint, new AzureKeyCredential(apiKey));
+//     const poller = await client.beginRecognizeContent(readStream);
+//     const pages = await poller.pollUntilDone();
+
+//     context.res = {
+//         // status: 200, /* Defaults to 200 */
+//         body: pages[0]
+//     };
+// }
