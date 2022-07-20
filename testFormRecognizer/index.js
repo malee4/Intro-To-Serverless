@@ -1,0 +1,48 @@
+const endpoint = process.env.FORM_RECOGNITION_ENDPOINT
+const apiKey = process.env.FORM_RECOGNITION_KEY
+const path = "/Users/melod/Desktop/cs/Intro-To-Serverless/testFormRecognizer/cardImage.jpg";
+
+const { FormRecognizerClient, AzureKeyCredential } = require("@azure/ai-form-recognizer");
+const fs = require("fs");
+
+
+// GENERAL FORM RECOGNIZER MODEL
+// module.exports = async function(context, req) {
+//     context.log('JavaScript HTTP trigger function processed a request.');
+
+//     const readStream = fs.createReadStream(path);
+
+//     const client = new FormRecognizerClient(endpoint, new AzureKeyCredential(apiKey));
+//     const poller = await client.beginRecognizeContent(readStream);
+//     const pages = await poller.pollUntilDone();
+
+//     context.res = {
+//         // status: 200, /* Defaults to 200 */
+//         body: pages[0]
+//     };
+// }
+
+// // BUSINESS CARD MODEL
+module.exports = async function (context, req) {
+    context.log('JavaScript HTTP trigger function processed a request.');
+
+    const readStream = fs.createReadStream(path);
+
+    const client = new FormRecognizerClient(endpoint, new AzureKeyCredential(apiKey));
+    const poller = await client.beginRecognizeBusinessCards(readStream, {
+        onProgress: (state) => {
+        console.log(`status: ${state.status}`);
+        }
+    });
+
+    const cards = await poller.pollUntilDone();
+
+    if (!cards || cards.length <= 0) {
+        throw new Error("Expecting at lease one card in analysis result");
+    }
+
+    context.res = {
+        // status: 200, /* Defaults to 200 */
+        body: cards[0]
+        };
+}

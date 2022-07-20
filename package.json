@@ -9,6 +9,7 @@
   "dependencies": {
     "@azure/storage-blob": "^12.10.0",
     "cypress": "^8.2.0",
+    "fs": "^0.0.1-security",
     "morse-code-converter": "^1.0.2",
     "node-fetch": "^2.6.7",
     "parse-multipart": "^1.0.4",

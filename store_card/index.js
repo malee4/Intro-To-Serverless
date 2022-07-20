@@ -1,9 +1,18 @@
-const { FormRecognizerClient, FormTrainingClient, AzureKeyCredential } = require("@azure/ai-form-recognizer");
+const { PrebuiltModels } = require("@azure/ai-form-recognizer");
 const fs = require("fs");
 
 const fetch = require('node-fetch');
 const mime = require('mime-types');
 const { BlobServiceClient } = require("@azure/storage-blob");
+
+// configuration for CosmosDB account
+const config = {
+    endpoint: process.env.COSMOS_ENDPOINT,
+    key: process.env.COSMOS_KEY,
+    databaseId: "SecretStorer",
+    containerId: "secrets",
+    partitionKey: {kind: "Hash", paths: ["/secrets"]}
+  };
 
 module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
@@ -49,7 +58,6 @@ module.exports = async function (context, req) {
         );
 
         responseMessage = `Status of Upload to Blob storage is: ${uploadBlobResponse._response.status}`;
-
     }
     catch (error) {
         context.log(error);
@@ -64,23 +72,39 @@ module.exports = async function (context, req) {
 
 
 // get information from card using Azure Form Recognizer model
-async function getInfo(businessCardImage) {
+async function getInfo(image_url) {
     const endpoint = process.env.FORM_RECOGNITION_ENDPOINT
-    const apiKey = process.env.FORM_RECOGNITION_KEY
+    const key = process.env.FORM_RECOGNITION_KEY
     
-    const client = new FormRecognizerClient(endpoint, new AzureKeyCredential(apiKey));
-    const poller = await client.beginRecognizeBusinessCardsFromUrl(businessCardImage, {
-    includeFieldElements: true,
-    onProgress: (state) => {
-        console.log(`analyzing status: ${state.status}`);
-    }
-    });
-    const [businessCard] = await poller.pollUntilDone();
+    const client = new DocumentAnalysisClient(endpoint, new AzureKeyCredential(key));
+    const poller = await client.beginAnalyzeDocument(PrebuiltModels.BusinessCard, image_url);
 
-    // make sure info returned is not null
-    if (businessCard === undefined) {
-        throw new Error("Failed to extract data from at least one business card.");
+    const {
+        documents: [result]
+    } = await poller.pollUntilDone();
+
+    if (result) {
+        const card = result.fields;
+    } else {
+        throw new Error("Expected at least one card in the result.");
     }
 
-    return businessCard;
+    return result;
+
+
+    // const client = new FormRecognizerClient(endpoint, new AzureKeyCredential(apiKey));
+    // const poller = await client.beginRecognizeBusinessCardsFromUrl(businessCardImage, {
+    // includeFieldElements: true,
+    // onProgress: (state) => {
+    //     console.log(`analyzing status: ${state.status}`);
+    // }
+    // });
+    // const [businessCard] = await poller.pollUntilDone();
+
+    // // make sure info returned is not null
+    // if (businessCard === undefined) {
+    //     throw new Error("Failed to extract data from at least one business card.");
+    // }
+
+    // return businessCard;
 }
