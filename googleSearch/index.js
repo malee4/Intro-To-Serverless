@@ -28,6 +28,7 @@ module.exports = async function (context, req) {
         const queryName = req.query['q']; // search is separated by spaces
         const url = getURL(queryName, api_url);
 
+        // get response via node-fetch
         let resp = await fetch(url, {
             method: 'GET',
             headers: {
@@ -35,6 +36,7 @@ module.exports = async function (context, req) {
             }
         });
 
+        // data is in the form of json with top search results and images returned from Google
         let data = await resp.json();
 
         context.log(data);
