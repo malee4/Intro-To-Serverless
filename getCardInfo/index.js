@@ -1,12 +1,14 @@
-// ProcessImageUpload/index.js
 const { v4: uuidv4 } = require('uuid');
-const { ApiKeyCredentials } = require('@azure/ms-rest-js');
-// const { ComputerVisionClient } = require('@azure/cognitiveservices-computervision');
 const sleep = require('util').promisify(setTimeout);
 const { FormRecognizerClient, AzureKeyCredential } = require("@azure/ai-form-recognizer");
 
-const STATUS_SUCCEEDED = "succeeded";
-const STATUS_FAILED = "failed"
+const config = {
+    endpoint: process.env.COSMOS_ENDPOINT,
+    key: process.env.COSMOS_KEY,
+    databaseId: "BusinessCardInfoStorer",
+    containerId: "cards",
+    partitionKey: {kind: "Hash", paths: ["/cards"]}
+  };
 
 module.exports = async function (context, myBlob) {
 
@@ -32,12 +34,10 @@ module.exports = async function (context, myBlob) {
             throw new Error("Failed to extract data from at least one business card.");
         }
 
-        context.log(businessCard);
-
         // IF TIME: reorganize info from businessCard
 
         // upload to CosmosDB
-        
+
 
 
     } catch (err) {
