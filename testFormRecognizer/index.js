@@ -7,21 +7,21 @@ const path = "/Users/melod/Desktop/cs/Intro-To-Serverless/testFormRecognizer/car
 
 const { FormRecognizerClient, AzureKeyCredential } = require("@azure/ai-form-recognizer");
 const fs = require("fs");
-querystring = require("qs");
+const querystring = require("qs");
 
 
-// // BUSINESS CARD MODEL
+// // // BUSINESS CARD MODEL
 module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
 
-    const queryObject = querystring.parse(req.body);
+    // const queryObject = querystring.parse(req.body);
 
-    // testing purposes
-    const bcUrl = queryObject.MediaUrl0;
+    // // testing purposes
+    // const bcUrl = queryObject.MediaUrl0;
 
     const client = new FormRecognizerClient(endpoint, new AzureKeyCredential(apiKey));
 
-    // bcUrl = "https://static.gotprint.com/tl/products/generic/images/business-cards/business_card_rounded_h.jpg";
+    bcUrl = "https://static.gotprint.com/tl/products/generic/images/business-cards/business_card_rounded_h.jpg";
     const poller = await client.beginRecognizeBusinessCardsFromUrl(bcUrl, {
         onProgress: (state) => {
             console.log(`status: ${state.status}`);

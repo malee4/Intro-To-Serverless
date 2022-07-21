@@ -1,8 +1,9 @@
 // ProcessImageUpload/index.js
 const { v4: uuidv4 } = require('uuid');
 const { ApiKeyCredentials } = require('@azure/ms-rest-js');
-const { ComputerVisionClient } = require('@azure/cognitiveservices-computervision');
+// const { ComputerVisionClient } = require('@azure/cognitiveservices-computervision');
 const sleep = require('util').promisify(setTimeout);
+const { FormRecognizerClient, AzureKeyCredential } = require("@azure/ai-form-recognizer");
 
 const STATUS_SUCCEEDED = "succeeded";
 const STATUS_FAILED = "failed"
@@ -44,23 +45,31 @@ module.exports = async function (context, myBlob) {
 
     try {
         context.log("JavaScript blob trigger function processed blob \n Blob:", context.bindingData.blobTrigger, "\n Blob Size:", myBlob.length, "Bytes");
-
-        const computerVision_ResourceKey = process.env.COMPUTER_VISION_KEY;
-        const computerVision_Endpoint = process.env.COMPUTER_VISION_ENDPOINT;
-
-        const computerVisionClient = new ComputerVisionClient(
-            new ApiKeyCredentials({ inHeader: { 'Ocp-Apim-Subscription-Key': computerVision_ResourceKey } }), computerVision_Endpoint);
-
-        // URL is the full path
-        // textContent should be a string
-        const textContext = await readFileUrl(context, computerVisionClient, context.bindingData.uri);
         
-        context.bindings.tableBinding = [];
-        context.bindings.tableBinding.push({
-            PartitionKey: "Images",
-            RowKey: uuidv4().toString(),
-            Text: textContext
+        const formRecognizer_ResourceKey = process.env.FORM_RECOGNITION_KEY;
+        const formRecognizer_Endpoint = process.env.FORM_RECOGNITION_ENDPOINT;
+
+        const client = new FormRecognizerClient(formRecognizer_Endpoint, new AzureKeyCredential(formRecognizer_ResourceKey));
+
+        context.log(context.bindingData.uri);
+
+        const poller = await client.beginRecognizeBusinessCardsFromUrl(context.bindingData.uri, {
+            onProgress: (state) => {
+                console.log(`status: ${state.status}`);
+            }
         });
+
+        const [businessCard] = await poller.pollUntilDone();
+
+        if (businessCard === undefined) {
+            throw new Error("Failed to extract data from at least one business card.");
+        }
+
+        context.log(businessCard);
+
+        // extract the information from the businessCard
+
+        // upload to CosmosDB
 
     } catch (err) {
         context.log(err);
