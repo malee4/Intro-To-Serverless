@@ -45,8 +45,8 @@ module.exports = async function (context, myBlob) {
     try {
         context.log("JavaScript blob trigger function processed blob \n Blob:", context.bindingData.blobTrigger, "\n Blob Size:", myBlob.length, "Bytes");
 
-        const computerVision_ResourceKey = process.env.COMPUTER_VISION_KEY;
-        const computerVision_Endpoint = process.env.COMPUTER_VISION_ENDPOINT;
+        const computerVision_ResourceKey = process.env.ComputerVisionKey;
+        const computerVision_Endpoint = process.env.ComputerVisionEndPoint;
 
         const computerVisionClient = new ComputerVisionClient(
             new ApiKeyCredentials({ inHeader: { 'Ocp-Apim-Subscription-Key': computerVision_ResourceKey } }), computerVision_Endpoint);
@@ -54,6 +54,8 @@ module.exports = async function (context, myBlob) {
         // URL must be full path
         const textContext = await readFileUrl(context, computerVisionClient, context.bindingData.uri);
 
+        context.log(textContent);
+        
         context.bindings.tableBinding = [];
         context.bindings.tableBinding.push({
             PartitionKey: "Images",

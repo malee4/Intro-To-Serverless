@@ -9,24 +9,45 @@ const fs = require("fs");
 module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
 
-    const readStream = fs.createReadStream(path);
+    const queryObject = querystring.parse(req.body);
+
+    // testing purposes
+    const bcUrl = queryObject.MediaUrl0;
 
     const client = new FormRecognizerClient(endpoint, new AzureKeyCredential(apiKey));
-    const poller = await client.beginRecognizeBusinessCards(readStream, {
+
+    // bcUrl = "https://static.gotprint.com/tl/products/generic/images/business-cards/business_card_rounded_h.jpg";
+    const poller = await client.beginRecognizeBusinessCardsFromUrl(bcUrl, {
         onProgress: (state) => {
-        console.log(`status: ${state.status}`);
+            console.log(`status: ${state.status}`);
         }
     });
 
-    const cards = await poller.pollUntilDone();
+    const [businessCard] = await poller.pollUntilDone();
 
-    if (!cards || cards.length <= 0) {
-        throw new Error("Expecting at lease one card in analysis result");
+    if (businessCard === undefined) {
+        throw new Error("Failed to extract data from at least one business card.");
     }
+
+
+    // const readStream = fs.createReadStream(path);
+
+    // const client = new FormRecognizerClient(endpoint, new AzureKeyCredential(apiKey));
+    // const poller = await client.beginRecognizeBusinessCards(readStream, {
+    //     onProgress: (state) => {
+    //     console.log(`status: ${state.status}`);
+    //     }
+    // });
+
+    // const cards = await poller.pollUntilDone();
+
+    // if (!cards || cards.length <= 0) {
+    //     throw new Error("Expecting at lease one card in analysis result");
+    // }
 
     context.res = {
         // status: 200, /* Defaults to 200 */
-        body: cards[0]
+        body: businessCard
         };
 }
 

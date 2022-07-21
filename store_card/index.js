@@ -1,33 +1,83 @@
+// const { FormRecognizerClient, AzureKeyCredential } = require("@azure/ai-form-recognizer");
+// const fs = require("fs");
+
+// const endpoint = process.env.FORM_RECOGNITION_ENDPOINT
+// const apiKey = process.env.FORM_RECOGNITION_KEY
+// const client = new FormRecognizerClient(endpoint, new AzureKeyCredential(apiKey));
+
+// module.exports = async function (context, req) {
+//     bcUrl = "https://github.com/Azure-Samples/cognitive-services-REST-api-samples/curl/form-recognizer/businessCard.png";
+//     const poller = await client.beginRecognizeBusinessCardsFromUrl(bcUrl, {
+//         onProgress: (state) => {
+//             console.log(`status: ${state.status}`);
+//         }
+//     });
+
+//     const [businessCard] = await poller.pollUntilDone();
+
+//     if (businessCard === undefined) {
+//         throw new Error("Failed to extract data from at least one business card.");
+//     }
+
+//     context.res = {
+//         body: businessCard,
+//     };
+// }
+
+
+
+
+
+// recognizeBusinessCards().catch((err) => {
+//     console.error("The sample encountered an error:", err);
+// });
+
+
+
+
+
+// ORIGINAL CODE
 const { PrebuiltModels } = require("@azure/ai-form-recognizer");
 const fs = require("fs");
+const querystring = require('qs');
+const urlUtil = require('url');
 
 const fetch = require('node-fetch');
 const mime = require('mime-types');
 const { BlobServiceClient } = require("@azure/storage-blob");
 
 // configuration for CosmosDB account
-const config = {
-    endpoint: process.env.COSMOS_ENDPOINT,
-    key: process.env.COSMOS_KEY,
-    databaseId: "SecretStorer",
-    containerId: "secrets",
-    partitionKey: {kind: "Hash", paths: ["/secrets"]}
-  };
+// const config = {
+//     endpoint: process.env.COSMOS_ENDPOINT,
+//     key: process.env.COSMOS_KEY,
+//     databaseId: "SecretStorer",
+//     containerId: "secrets",
+//     partitionKey: {kind: "Hash", paths: ["/secrets"]}
+//   };
 
 module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
     
     // return messages
-    let responseMessage = "";
+    let responseMessage = "hello";
     let responseStatus = "200";
 
     // take in image as POST
+    // context.log("before req.body.url")
+    // const queryObject = querystring.parse(req.body);
+    // const url = queryObject.MediaUrl0;
+    // const picname = "hello"
+
     const url = req.body.url;
+    context.log("after req.body.url")
     const picName = req.body.picname;
+
+    // const url = req.body["MediaUrl0"];
 
     try {
         // get the response from the Twilio URL
         const response = await fetch(url);
+        context.log("fetched url successfully")
 
         // if fetch is not successful
         if (!response.ok) {
@@ -39,6 +89,7 @@ module.exports = async function (context, req) {
 
         // set the file name with the file type extension appended at the end
         const fileName = `${picName}.${mime.extension(mimeType)}`
+
 
         // connect to Blob Storage
         const blobContainerName = "businesscardstorage";
@@ -66,18 +117,18 @@ module.exports = async function (context, req) {
     }
 
     context.res = {
-        body: responseMessage,
+        body: url,
     };
 }
 
 
 // get information from card using Azure Form Recognizer model
-async function getInfo(image_url) {
+async function getInfo(img) {
     const endpoint = process.env.FORM_RECOGNITION_ENDPOINT
     const key = process.env.FORM_RECOGNITION_KEY
     
     const client = new DocumentAnalysisClient(endpoint, new AzureKeyCredential(key));
-    const poller = await client.beginAnalyzeDocument(PrebuiltModels.BusinessCard, image_url);
+    const poller = await client.beginAnalyzeDocument(PrebuiltModels.BusinessCard, img);
 
     const {
         documents: [result]
