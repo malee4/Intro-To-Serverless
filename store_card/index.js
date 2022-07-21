@@ -69,8 +69,10 @@ module.exports = async function (context, req) {
     // const picname = "hello"
 
     const url = req.body.url;
-    context.log("after req.body.url")
+    context.log(url);
+    // const url = "https://api.twilio.com/2010-04-01/Accounts/ACa8f74b34174b5d9b3380c97c0988885a/Messages/MM3829c6dcd13b80ab13ba8ff7a7d3cef1/Media/MEdf211d5a5752d943b5ac9a6aa14ecb8b";
     const picName = req.body.picname;
+    // const picName = "hello";
 
     // const url = req.body["MediaUrl0"];
 
@@ -117,7 +119,7 @@ module.exports = async function (context, req) {
     }
 
     context.res = {
-        body: url,
+        body: responseMessage,
     };
 }
 

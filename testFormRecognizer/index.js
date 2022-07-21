@@ -1,9 +1,14 @@
+// possible solution: https://github.com/MicrosoftDocs/azure-docs/issues/37731
+// second possible solution: https://docs.microsoft.com/en-us/azure/applied-ai-services/form-recognizer/quickstarts/try-v3-javascript-sdk
+
 const endpoint = process.env.FORM_RECOGNITION_ENDPOINT
 const apiKey = process.env.FORM_RECOGNITION_KEY
 const path = "/Users/melod/Desktop/cs/Intro-To-Serverless/testFormRecognizer/cardImage.jpg";
 
 const { FormRecognizerClient, AzureKeyCredential } = require("@azure/ai-form-recognizer");
 const fs = require("fs");
+querystring = require("qs");
+
 
 // // BUSINESS CARD MODEL
 module.exports = async function (context, req) {
