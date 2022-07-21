@@ -34,6 +34,7 @@ module.exports = async function (context, myBlob) {
         // IF TIME: reorganize info from businessCard
 
         // upload to CosmosDB (TO DO: add image file)
+        context.log("Uploading JSON");
         await uploadJSON(businessCard, context.bindingData.uri);
 
     } catch (err) {
@@ -65,7 +66,7 @@ async function uploadJSON(businessCard, URL) {
     const { resource: businessCard } = await container.items.create(businessCard);
     console.log(`\r\nUploaded new card: ${businessCard.id} - ${businessCard.description}\r\n`);
 
-    return "finished upload"
+    context.log("Finished Upload");
 }
 
 // This script ensures that the database is setup and populated correctly
