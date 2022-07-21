@@ -1,0 +1,11 @@
+{
+  "bindings": [
+    {
+      "name": "melodybitstorageaccount",
+      "type": "blobTrigger",
+      "direction": "in",
+      "path": "businesscardstorage/{name}",
+      "connection": "AzureWebJobsStorage"
+    }
+  ]
+}

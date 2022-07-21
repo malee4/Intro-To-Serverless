@@ -28,50 +28,48 @@ IF TIME: User "logins"
 
 #### Description
 - Create the store business cards Azure function
+- That is, store as an image (with extension) in Blob storage, then download accordingly for processing
 
 #### ETA:
 > How long do you think it will take to complete this?
-- 0.5 hours to complete Twilio --> Azure Function
-- 1 hour to complete Azure Function --> Form Recognizer --> Azure Function
-- 1 hour to complete Azure Function --> CosmosDB
-- 0.5 hour leeway 
+- 5 hours to complete Twilio --> Azure Function
 
 #### Objective:
 > Checklist of everything you need to do to complete this issue
 - [ ] Take in image using the Twilio API
-- [ ] Pass image through Azure Form Recognizer, return as JSON
-- [ ] Create a function to convert the image to Base64 
-- [ ] Append Base64 to JSON
-- [ ] Store JSON in CosmosDB
+- [ ] Store in Blob Storage with corresponding file extension
 
 ## Week 2
 ### Get Card Information Development:
 
 #### Description
-- Translation function
-- Google search function
+- Continue to work on the taking in and processing of the card 
+- Begin to develop information extraction functions
+- Towards the end of the week: start considering what UI layout will look like (test implementations)
 
 #### ETA:
-- 4-5 hours
+- 4-5 hours for the development of a working function to read information from the card
+- 1-2 hours to write a function that correctly calls the JSON from the CosmosDB
+- 2-3 hours to write the function that retrieves information on the query from the Google API
 
 #### Objective:
-- Create function to return translation of a function
-- Create function to return top 5-10 Google search results for name and company on card
-- Create rough framework to call said functions in HTML
+- Develop the function needed to read information from the card and store accordingly
+- Begin to work on the Google search function
 
 ## Week 3
-### Front End Development:
+### Further Development of Information Extraction and Frontend
 
 #### Description
-- Create a presentable form of the HTML page
+- Create an understandable form of the HTML page with key functions
+- Wrap up the Google search function
+- If time, incorporate the translation function
 
 #### ETA:
-- 3-4 hours
+- 3-4 hours for HTML page set-up
+- 2 hours for Google search function finalization
 
 #### Objective:
-- Use the rough framework from Week 2 to construct a functioning webpage
-- Create a function to call and display information on the cards
-- Format the HTML/make it presentable
+- Use the rough framework from Week 2 to construct a minimally functioning webpage
 - Start planning for the blog post and presentation
 
 ## Week 4
@@ -79,9 +77,13 @@ IF TIME: User "logins"
 
 #### Description
 - Prepare for the final presentations and finalization of deliverable products for BitProject.
+- Record demo for blog post
+- Continue working on frontend product
+- If there is time, incorporate the translation function 
 
 #### ETA:
-- 3-4 hours
+- 3-4 hours on presentation preparation
+- 1-2 hours for recording the demo
 
 #### Objective:
 - Write the blog post
