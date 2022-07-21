@@ -45,6 +45,7 @@ IF TIME: User "logins"
 #### Description
 - Continue to work on the taking in and processing of the card 
 - Begin to develop information extraction functions
+- Towards the end of the week: start considering what UI layout will look like (test implementations)
 
 #### ETA:
 - 4-5 hours for the development of a working function to read information from the card
