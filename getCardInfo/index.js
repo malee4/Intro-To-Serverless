@@ -67,7 +67,7 @@ async function uploadJSON(businessCard, URL) {
         // add the businessCard to the cosmos DB container
         const { resource: businessCard } = await container.items.create(businessCard);
         console.log(`\r\nUploaded new card: ${businessCard.id} - ${businessCard.description}\r\n`);
-        return "Finished upload");
+        return "Finished upload";
     } catch (err) {
         context.log(err);
         return;
@@ -77,21 +77,28 @@ async function uploadJSON(businessCard, URL) {
 
 // This script ensures that the database is setup and populated correctly
 async function create(client, databaseId, containerId) {
-    const partitionKey = config.partitionKey;
+    try {
+        const partitionKey = config.partitionKey;
   
-    // create the database if it does not exist
-    const { database } = await client.databases.createIfNotExists({
-      id: databaseId
-    });
-    console.log(`Created database:\n${database.id}\n`);
-  
-    // create the container if it does not exist
-    const { container } = await client
-      .database(databaseId)
-      .containers.createIfNotExists(
-        { id: containerId, partitionKey },
-        { offerThroughput: 400 }
-      );
-  
-    console.log(`Created container:\n${container.id}\n`);
+        // create the database if it does not exist
+        const { database } = await client.databases.createIfNotExists({
+        id: databaseId
+        });
+        console.log(`Created database:\n${database.id}\n`);
+    
+        // create the container if it does not exist
+        const { container } = await client
+        .database(databaseId)
+        .containers.createIfNotExists(
+            { id: containerId, partitionKey },
+            { offerThroughput: 400 }
+        );
+    
+        console.log(`Created container:\n${container.id}\n`);
+        return;
+    } catch (err) {
+        context.log(err);
+        return;
+    }
+    
 }
