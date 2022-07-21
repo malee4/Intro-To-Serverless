@@ -8,39 +8,6 @@ const { FormRecognizerClient, AzureKeyCredential } = require("@azure/ai-form-rec
 const STATUS_SUCCEEDED = "succeeded";
 const STATUS_FAILED = "failed"
 
-async function readFileUrl(context, computerVisionClient, url) {
-
-    try {
-
-        context.log(`uri = ${url}`);
-
-        // To recognize text in a local image, replace client.read() with readTextInStream() as shown:
-        let result = await computerVisionClient.read(url);
-
-        // Operation ID is last path segment of operationLocation (a URL)
-        let operation = result.operationLocation.split('/').slice(-1)[0];
-
-        // Wait for read recognition to complete
-        // result.status is initially undefined, since it's the result of read
-        while (result.status !== STATUS_SUCCEEDED) {
-            await sleep(1000);
-            result = await computerVisionClient.getReadResult(operation);
-        }
-
-        let contents = "";
-
-        result.analyzeResult.readResults.map((page) => {
-            page.lines.map(line => {
-                contents += line.text + "\n\r"
-            });
-        });
-        return contents;
-
-    } catch (err) {
-        console.log(err);
-    }
-}
-
 module.exports = async function (context, myBlob) {
 
     try {
@@ -67,9 +34,11 @@ module.exports = async function (context, myBlob) {
 
         context.log(businessCard);
 
-        // extract the information from the businessCard
+        // IF TIME: reorganize info from businessCard
 
         // upload to CosmosDB
+        
+
 
     } catch (err) {
         context.log(err);

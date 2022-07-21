@@ -1,46 +1,6 @@
-// const { FormRecognizerClient, AzureKeyCredential } = require("@azure/ai-form-recognizer");
-// const fs = require("fs");
-
-// const endpoint = process.env.FORM_RECOGNITION_ENDPOINT
-// const apiKey = process.env.FORM_RECOGNITION_KEY
-// const client = new FormRecognizerClient(endpoint, new AzureKeyCredential(apiKey));
-
-// module.exports = async function (context, req) {
-//     bcUrl = "https://github.com/Azure-Samples/cognitive-services-REST-api-samples/curl/form-recognizer/businessCard.png";
-//     const poller = await client.beginRecognizeBusinessCardsFromUrl(bcUrl, {
-//         onProgress: (state) => {
-//             console.log(`status: ${state.status}`);
-//         }
-//     });
-
-//     const [businessCard] = await poller.pollUntilDone();
-
-//     if (businessCard === undefined) {
-//         throw new Error("Failed to extract data from at least one business card.");
-//     }
-
-//     context.res = {
-//         body: businessCard,
-//     };
-// }
-
-
-
-
-
-// recognizeBusinessCards().catch((err) => {
-//     console.error("The sample encountered an error:", err);
-// });
-
-
-
-
-
-// ORIGINAL CODE
 const { PrebuiltModels } = require("@azure/ai-form-recognizer");
-const fs = require("fs");
 const querystring = require('qs');
-const urlUtil = require('url');
+const path = require('path');
 
 const fetch = require('node-fetch');
 const mime = require('mime-types');
@@ -74,7 +34,10 @@ module.exports = async function (context, req) {
     const queryObject = querystring.parse(req.body);
     const url = queryObject.MediaUrl0;
 
-    const picName = req.body.picname;
+    // const mediaSid = path.basename(urlUtil.parse(url).pathname);
+
+    // const picName = mediaSid;
+    const picName = url.substring(url.lastIndexOf('/')+1); // to avoid uploads overwriting each other
     // const picName = "hello";
 
     //const url = req.body["MediaUrl0"];
