@@ -1,10 +1,10 @@
 {
   "bindings": [
     {
-      "name": "myBlob",
+      "name": "melodybitstorageaccount",
       "type": "blobTrigger",
       "direction": "in",
-      "path": "images/{name}",
+      "path": "businesscardstorage/{name}",
       "connection": "AzureWebJobsStorage"
     }
   ]

@@ -51,17 +51,22 @@ module.exports = async function (context, myBlob) {
         const computerVisionClient = new ComputerVisionClient(
             new ApiKeyCredentials({ inHeader: { 'Ocp-Apim-Subscription-Key': computerVision_ResourceKey } }), computerVision_Endpoint);
 
-        // URL must be full path
+        // URL is the full path
+        // textContent should be a string
         const textContext = await readFileUrl(context, computerVisionClient, context.bindingData.uri);
 
         context.log(textContent);
-        
-        context.bindings.tableBinding = [];
-        context.bindings.tableBinding.push({
-            PartitionKey: "Images",
-            RowKey: uuidv4().toString(),
-            Text: textContext
-        });
+
+
+
+
+        // context.bindings.tableBinding = [];
+        // context.bindings.tableBinding.push({
+        //     PartitionKey: "Images",
+        //     RowKey: uuidv4().toString(),
+        //     Text: textContext
+        // });
+
     } catch (err) {
         context.log(err);
         return;
