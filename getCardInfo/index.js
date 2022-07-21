@@ -35,7 +35,8 @@ module.exports = async function (context, myBlob) {
 
         // upload to CosmosDB (TO DO: add image file)
         context.log("Uploading JSON");
-        await uploadJSON(businessCard, context.bindingData.uri);
+        let uploadMessage = await uploadJSON(businessCard, context.bindingData.uri);
+        context.log(uploadMessage);
 
     } catch (err) {
         context.log(err);
@@ -53,20 +54,25 @@ const config = {
   };
 
 async function uploadJSON(businessCard, URL) {
-    // append the url to the businessCard json
-    businessCard['CARD_URL'] = URL;
-    const { endpoint, key, databaseId, containerId } = config;
-    const client = new CosmosClient({ endpoint, key });
-    const database = client.database(databaseId);
-    const container = database.container(containerId);
+    try {
+        // append the url to the businessCard json
+        businessCard['CARD_URL'] = URL;
+        const { endpoint, key, databaseId, containerId } = config;
+        const client = new CosmosClient({ endpoint, key });
+        const database = client.database(databaseId);
+        const container = database.container(containerId);
 
-    await create(client, databaseId, containerId);
+        await create(client, databaseId, containerId);
 
-    // add the businessCard to the cosmos DB container
-    const { resource: businessCard } = await container.items.create(businessCard);
-    console.log(`\r\nUploaded new card: ${businessCard.id} - ${businessCard.description}\r\n`);
-
-    context.log("Finished Upload");
+        // add the businessCard to the cosmos DB container
+        const { resource: businessCard } = await container.items.create(businessCard);
+        console.log(`\r\nUploaded new card: ${businessCard.id} - ${businessCard.description}\r\n`);
+        return "Finished upload");
+    } catch (err) {
+        context.log(err);
+        return;
+    }
+    
 }
 
 // This script ensures that the database is setup and populated correctly
