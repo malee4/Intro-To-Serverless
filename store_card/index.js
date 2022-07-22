@@ -6,15 +6,6 @@ const fetch = require('node-fetch');
 const mime = require('mime-types');
 const { BlobServiceClient } = require("@azure/storage-blob");
 
-// configuration for CosmosDB account
-// const config = {
-//     endpoint: process.env.COSMOS_ENDPOINT,
-//     key: process.env.COSMOS_KEY,
-//     databaseId: "SecretStorer",
-//     containerId: "secrets",
-//     partitionKey: {kind: "Hash", paths: ["/secrets"]}
-//   };
-
 module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
     
@@ -22,15 +13,6 @@ module.exports = async function (context, req) {
     let responseMessage = "hello";
     let responseStatus = "200";
 
-    // take in image as POST
-    // context.log("before req.body.url")
-    // const queryObject = querystring.parse(req.body);
-    // const url = queryObject.MediaUrl0;
-    // const picname = "hello"
-
-    // const url = req.body.url;
-    // context.log(url);
-    // const url = "https://api.twilio.com/2010-04-01/Accounts/ACa8f74b34174b5d9b3380c97c0988885a/Messages/MM3829c6dcd13b80ab13ba8ff7a7d3cef1/Media/MEdf211d5a5752d943b5ac9a6aa14ecb8b";
     const queryObject = querystring.parse(req.body);
     const url = queryObject.MediaUrl0;
 

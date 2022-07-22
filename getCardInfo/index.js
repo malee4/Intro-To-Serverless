@@ -3,8 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 const sleep = require('util').promisify(setTimeout);
 const { FormRecognizerClient, AzureKeyCredential } = require("@azure/ai-form-recognizer");
 
-// for uploading to CosmosDB
-const qs = require('qs');
+// // for uploading to CosmosDB
 const CosmosClient = require("@azure/cosmos").CosmosClient;
 
 module.exports = async function (context, myBlob) {
@@ -31,11 +30,15 @@ module.exports = async function (context, myBlob) {
             throw new Error("Failed to extract data from at least one business card.");
         }
 
+        context.log(businessCard);
+        context.log(typeof businessCard);
+
         // IF TIME: reorganize info from businessCard
 
         // upload to CosmosDB (TO DO: add image file)
         context.log("Uploading JSON");
-        let uploadMessage = await uploadJSON(businessCard, context.bindingData.uri);
+        // let uploadMessage = await uploadJSON(businessCard, context.bindingData.uri);
+        let uploadMessage = await uploadJSON(businessCard);
         context.log(uploadMessage);
 
     } catch (err) {
@@ -50,30 +53,8 @@ const config = {
     key: process.env.COSMOS_KEY,
     databaseId: "BusinessCardInfoStorer",
     containerId: "cards",
-    partitionKey: {kind: "Hash", paths: ["/cards"]}
-  };
-
-async function uploadJSON(businessCard, URL) {
-    try {
-        // append the url to the businessCard json
-        businessCard['CARD_URL'] = URL;
-        const { endpoint, key, databaseId, containerId } = config;
-        const client = new CosmosClient({ endpoint, key });
-        const database = client.database(databaseId);
-        const container = database.container(containerId);
-
-        await create(client, databaseId, containerId);
-
-        // add the businessCard to the cosmos DB container
-        const { resource: businessCard } = await container.items.create(businessCard);
-        console.log(`\r\nUploaded new card: ${businessCard.id} - ${businessCard.description}\r\n`);
-        return "Finished upload";
-    } catch (err) {
-        context.log(err);
-        return;
-    }
-    
-}
+    partitionKey: {kind: "Hash", paths: ["/category"]}
+};
 
 // This script ensures that the database is setup and populated correctly
 async function create(client, databaseId, containerId) {
@@ -98,6 +79,30 @@ async function create(client, databaseId, containerId) {
         return;
     } catch (err) {
         context.log(err);
+        return;
+    }
+    
+}
+
+//async function uploadJSON(businessCard, URL) {
+async function uploadJSON(businessCard) {
+    // businessCard['CARD_URL'] = URL;
+
+    try {
+        // append the url to the businessCard json
+        const { endpoint, key, databaseId, containerId } = config;
+        const client = new CosmosClient({ endpoint, key });
+        const database = client.database(databaseId);
+        const container = database.container(containerId);
+
+        await create(client, databaseId, containerId);
+
+        // add the businessCard to the cosmos DB container
+        const { resource: createdItem } = await container.items.create(businessCard);
+        console.log(`\r\nUploaded new card: ${createdItem.id} - ${createdItem.description}\r\n`);
+        return "Finished upload";
+    } catch (err) {
+        context.log(err.message);
         return;
     }
     
