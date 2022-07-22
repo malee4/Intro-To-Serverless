@@ -34,13 +34,13 @@ module.exports = async function (context, myBlob) {
 
         context.log(businessCard);
         
-        // if (businessCard) {
-        //     context.bindings.outputDocument = JSON.stringify({
-        //         // create a random ID
-        //         id: new Date().toISOString() + Math.random().toString().substring(2, 10),
-        //         data: businessCard
-        //     });
-        // }
+        if (businessCard) {
+            context.bindings.outputDocument = JSON.stringify({
+                // create a random ID
+                id: new Date().toISOString() + Math.random().toString().substring(2, 10),
+                data: businessCard
+            });
+        }
 
         // IF TIME: reorganize info from businessCard
 
