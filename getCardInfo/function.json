@@ -14,9 +14,7 @@
       "databaseName": "my-database",
       "collectionName": "my-container",
       "createIfNotExists": false,
-      "connectionStringSetting": "CosmosDbConnectionString",
-      "partitionKey": "",
-      "collectionThroughput": ""
+      "connectionStringSetting": "CosmosDbConnectionString"
     }
   ]
 }
