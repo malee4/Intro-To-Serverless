@@ -30,15 +30,21 @@ module.exports = async function (context, myBlob) {
             throw new Error("Failed to extract data from at least one business card.");
         }
 
-        businessCard['CARD_URL'] = context.bindingData.uri;
-
         context.log(businessCard);
-        
+        let name = businessCard.fields.ContactNames.value[0].value.FirstName.name + " " + businessCard.fields.ContactNames.value[0].value.LastName.name;
+        // upload to Cosmos DB 
         if (businessCard) {
             context.bindings.outputDocument = JSON.stringify({
                 // create a random ID
                 id: new Date().toISOString() + Math.random().toString().substring(2, 10),
-                data: businessCard
+                contactName: name,
+                companyName: businessCard.fields.CompanyNames.value[0].value,
+                address: businessCard.fields.Addresses.value[0].value,
+                email: businessCard.fields.Emails.value[0].value,
+                website: businessCard.fields.Websites.value[0].value,
+                fax: businessCard.fields.Faxes.value[0].value,
+                otherPhones: businessCard.fields.OtherPhones.value[0].value,
+                cardUrl: context.bindingData.uri
             });
         }
 

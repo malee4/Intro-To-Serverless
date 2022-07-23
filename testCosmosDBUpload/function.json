@@ -18,7 +18,7 @@
     {
       "type": "cosmosDB",
       "direction": "out",
-      "name": "testOutputDocument",
+      "name": "outputDocument",
       "databaseName": "my-database",
       "collectionName": "my-collection",
       "createIfNotExists": true,
