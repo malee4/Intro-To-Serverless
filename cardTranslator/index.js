@@ -1,3 +1,9 @@
+const axios = require('axios').default;
+const { v4: uuidv4 } = require('uuid');
+
+let endpoint = process.env.TRANSLATOR_ENDPOINT
+let key = process.env.TRANSLATOR_KEY
+
 module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
 
