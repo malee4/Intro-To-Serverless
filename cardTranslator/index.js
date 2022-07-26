@@ -6,7 +6,13 @@ const fetch = require('node-fetch');
 module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
 
-    
+    // get the language being requested (via POST)
+    const lang = req.query['language'];
+    const inText = req.body//.json()
+
+    // get the JSON of the translated text
+    const outText = await translate(inText, lang);
+    console.log(outText);
 
     context.res = {
         // status: 200, /* Defaults to 200 */
