@@ -1,7 +1,6 @@
 // get the packages
 const axios = require('axios').default;
 const { v4: uuidv4 } = require('uuid');
-const fetch = require('node-fetch');
 
 module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
@@ -23,27 +22,10 @@ module.exports = async function (context, req) {
 }
 
 async function translate(text, toLanguage) {
-    let endpoint = new URL(process.env.TEXT_TRANSLATOR_ENDPOINT + 'translate');
+    let endpoint = process.env.TEXT_TRANSLATOR_ENDPOINT + 'translate';
     context.log(endpoint)
     let key = process.env.TRANSLATOR_KEY;
-    let location = "East US";
-
-    const resp = await fetch(endpoint, {
-        method:'POST',
-        headers: {
-            'Ocp-Apim-Subscription-Key': key,
-            'Content-type': 'application/json',
-            'X-ClientTraceId': uuidv4().toString()
-        },
-        params: {
-            'api-version': '3.0',
-            'to': ['en']
-        }, 
-        body: [{
-            'text': 'hola mi nombre es melodia'
-        }],
-        responseType: 'json'
-    });
+    let location = "eastus";
 
 
     // const resp = await fetch(endpoint + 'translate', {
