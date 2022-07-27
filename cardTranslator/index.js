@@ -7,8 +7,10 @@ module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
 
     // get the language being requested (via POST)
-    const lang = req.query['language'];
+    const lang = req.headers['language'];
+    console.log(lang)
     const inText = req.body//.json()
+    console.log(inText)
 
     // get the JSON of the translated text
     const outText = await translate(inText, lang);
@@ -16,29 +18,47 @@ module.exports = async function (context, req) {
 
     context.res = {
         // status: 200, /* Defaults to 200 */
-        body: responseMessage
+        body: outText
     };
 }
 
 async function translate(text, toLanguage) {
-    let endpoint = process.env.TRANSLATOR_ENDPOINT;
+    let endpoint = new URL(process.env.TEXT_TRANSLATOR_ENDPOINT + 'translate');
+    context.log(endpoint)
     let key = process.env.TRANSLATOR_KEY;
     let location = "East US";
 
-    const resp = await fetch(endpoint + 'translate', {
-        method: 'POST',
+    const resp = await fetch(endpoint, {
+        method:'POST',
         headers: {
             'Ocp-Apim-Subscription-Key': key,
-            'Ocp-Apim-Subscription-Region': location,
-            'Content-type': 'application/json'
+            'Content-type': 'application/json',
+            'X-ClientTraceId': uuidv4().toString()
         },
         params: {
             'api-version': '3.0',
-            'to': [toLanguage]
-        },
-        data: [text],
+            'to': ['en']
+        }, 
+        body: [{
+            'text': 'hola mi nombre es melodia'
+        }],
         responseType: 'json'
     });
+
+
+    // const resp = await fetch(endpoint + 'translate', {
+    //     method: 'POST',
+    //     headers: {
+    //         'Ocp-Apim-Subscription-Key': key,
+    //         'Content-type': 'charset=UTF-8'//'application/json'
+    //     },
+    //     params: {
+    //         'api-version': '3.0',
+    //         'to': [toLanguage]
+    //     },
+    //     data: [text],
+    //     responseType: 'json'
+    // });
 
     let data = await resp.json();
 
