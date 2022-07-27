@@ -8,11 +8,12 @@ module.exports = async function (context, req) {
     // get the language being requested (via POST)
     const lang = req.headers['language'];
     console.log(lang)
-    const inText = req.body//.json()
+    const inText = req.body//.json() // should be a json object
     console.log(inText)
 
     // get the JSON of the translated text
     const outText = await translate(inText, lang);
+    
     console.log(outText);
 
     context.res = {
@@ -21,29 +22,28 @@ module.exports = async function (context, req) {
     };
 }
 
+// translate the text
 async function translate(text, toLanguage) {
-    let endpoint = process.env.TEXT_TRANSLATOR_ENDPOINT + 'translate';
-    context.log(endpoint)
+    let endpoint = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0";
+    let url = endpoint + "&to=" + toLanguage
     let key = process.env.TRANSLATOR_KEY;
-    let location = "eastus";
+    let location = "eastus"
 
-
-    // const resp = await fetch(endpoint + 'translate', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Ocp-Apim-Subscription-Key': key,
-    //         'Content-type': 'charset=UTF-8'//'application/json'
-    //     },
-    //     params: {
-    //         'api-version': '3.0',
-    //         'to': [toLanguage]
-    //     },
-    //     data: [text],
-    //     responseType: 'json'
-    // });
-
+    let resp = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Ocp-Apim-Subscription-Key': key,
+            'Ocp-Apim-Subscription-Region': location,
+            'Content-type': 'application/json',
+            'X-ClientTraceId': uuidv4().toString()
+        },
+        body: JSON.stringify(text),
+    })
+    
     let data = await resp.json();
 
-    return data
+    let translations = data[0].translations
+
+    return translations
 
 }
