@@ -65,40 +65,45 @@ module.exports = async function (context, req) {
     console.log(items)
 
   
-    let count = 0
-
-    let names = {}
-
-    for (let i = 0; i < items.length; i++) {
-      let card = items[i]
-      //console.log(card)
-      let cardName = ""
-      try {
-        cardName = card.contactName
-      } catch(err) {
-        console.log(err)
-      }
-      try {
-        cardName = cardName + ", " +  card.companyName;
-      } catch(err) {
-        console.log(err)
-      }
-      names[cardName] = count;
-      count = count + 1;
-      
-    };
-    context.log(names)
+    
 
     if (reqType === 'nameList') {
       context.log("Returning list of names");
+      let count = 0
+
+      let names = {}
+
+      for (let i = 0; i < items.length; i++) {
+        let card = items[i]
+        //console.log(card)
+        let cardName = ""
+        try {
+          cardName = card.contactName
+        } catch(err) {
+          console.log(err)
+        }
+        try {
+          cardName = cardName + ", " +  card.companyName;
+        } catch(err) {
+          console.log(err)
+        }
+        names[cardName] = count;
+        count = count + 1;
+        
+      };
+      context.log(names)
+      
       body = names;
     } else if (reqType === 'cardImage') {
       context.log("Returning the card requested")
-      let cardName = req.quer['inputName'];
-      body = items[names[cardName]]
+      let cardIndex = req.query['cosmosIndex'];
+      body = items[cardIndex]
     } else {
-      body = "Please input a valid request type"
+      body = {}
+      console.log("Please input a valid request type")
     }
+
+    context.log(body)
 
     context.res = {
         // status: 200, /* Defaults to 200 */

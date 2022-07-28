@@ -50,14 +50,16 @@ module.exports = async function (context, req) {
     //     throw new Error("Expecting at lease one card in analysis result");
     // }
 
-    const endpoint = "https://melodybitproj.azurewebsites.net/api/retrieveCardsFromCosmos?code=nAgyFZJbId1UKolKbNV7UC7NlvYmT3BUxNmC3Yx40aBrAzFuB6srBQ==?reqType=nameList"
+    const endpoint = "https://melodybitproj.azurewebsites.net/api/retrieveCardsFromCosmos?reqType=nameList" 
     const resp = await fetch(endpoint, {
         "method":"GET"
     });
     context.log(resp)
     const data = await resp.json();
+    context.log("DATA")
     context.log(data)
-    const cardNameList = Object.keys(data); // retrieve from retrieveCardsFromCosmos
+
+    //const cardNameList = Object.keys(data); // retrieve from retrieveCardsFromCosmos
     
 
     context.res = {
