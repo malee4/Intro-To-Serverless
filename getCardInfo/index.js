@@ -29,45 +29,77 @@ module.exports = async function (context, myBlob) {
         if (businessCard === undefined) {
             throw new Error("Failed to extract data from at least one business card.");
         }
-
-        context.log(businessCard);
-        let name = businessCard.fields.ContactNames.value[0].value.FirstName.name + " " + businessCard.fields.ContactNames.value[0].value.LastName.name;
         
         let cardInfo = {
             id: new Date().toISOString() + Math.random().toString().substring(2, 10),
             cardUrl: context.bindingData.uri
         }
 
-        if (name != undefined) {
-            cardInfo["contactName"] = name
-        }
-        if (businessCard.fields.CompanyNames.value[0].value != undefined) {
-            cardInfo["companyName"] = businessCard.fields.CompanyNames.value[0].value
-        }
-        if (businessCard.fields.Addresses.value[0].value != undefined) {
-            cardInfo["address"] = businessCard.fields.Addresses.value[0].value
-        }
-        if (businessCard.fields.Emails.value[0].value != undefined) {
-            cardInfo["email"] = businessCard.fields.Emails.value[0].value
-        }
-        if (businessCard.fields.Websites.value[0].value != undefined) {
-            cardInfo["website"] = businessCard.fields.Websites.value[0].value
-        }
-        if (businessCard.fields.Faxes.value[0].value != undefined) {
-            cardInfo["fax"] = businessCard.fields.Faxes.value[0].value
-        }
-        if (businessCard.fields.OtherPhones.value[0].value != undefined) {
-            cardInfo["otherPhones"] = businessCard.fields.OtherPhones.value[0].value
+        try {
+            let name = businessCard.fields.ContactNames.value[0].value.FirstName.value + " " + businessCard.fields.ContactNames.value[0].value.LastName.value;
+            if (name != undefined) {
+                cardInfo["contactName"] = name
+            }
+        } catch(err){
+            console.log(err)
         }
         
-        
-        
-        
-        // upload to Cosmos DB 
-        if (businessCard) {
-            context.bindings.outputDocument = JSON.stringify(cardInfo);
+        try {
+            if (businessCard.fields.CompanyNames.value[0].value != undefined) {
+                cardInfo["companyName"] = businessCard.fields.CompanyNames.value[0].value
+            }
+        } catch(err) {
+            console.log(err)
         }
-
+        
+        try {
+            if (businessCard.fields.Addresses.value[0].value != undefined) {
+                cardInfo["address"] = businessCard.fields.Addresses.value[0].value
+            }
+        } catch(err) {
+            console.log(err)
+        }
+        
+        try {
+            if (businessCard.fields.Emails.value[0].value != undefined) {
+                cardInfo["email"] = businessCard.fields.Emails.value[0].value
+            }
+        } catch(err) {
+            console.log(err)
+        }
+        
+        try {
+            if (businessCard.fields.Websites.value[0].value != undefined) {
+                cardInfo["website"] = businessCard.fields.Websites.value[0].value
+            }
+        } catch(err) {
+            console.log(err)
+        }
+        console.log("I've finished trying websites")
+        try {
+            if (businessCard.fields.Faxes.value[0].value != undefined) {
+                cardInfo["fax"] = businessCard.fields.Faxes.value[0].value
+            }
+        } catch(err) {
+            console.log(err)
+        }
+        
+        try {
+            if (businessCard.fields.OtherPhones.value[0].value != undefined) {
+                cardInfo["otherPhones"] = businessCard.fields.OtherPhones.value[0].value
+            }
+        } catch(err) {
+            console.log(err)
+        }
+        
+        try {
+            if (businessCard) {
+                context.bindings.outputDocument = JSON.stringify(cardInfo);
+            }
+        } catch(err) {
+            console.log(err)
+        }
+        
     } catch (err) {
         context.log(err);
         return;
