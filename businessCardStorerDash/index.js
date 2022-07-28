@@ -1,0 +1,1 @@
+//let selectCard = document.getElementById("selectCard");
