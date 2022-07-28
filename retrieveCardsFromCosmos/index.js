@@ -51,33 +51,58 @@ async function getCards() {
   // read all items
   const {resources: items } = await container.items.query(querySpec).fetchAll();
 
-  console.log(items)
-
+  return items;
 }
 
 
 module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
 
+    let body = "empty";
+    const reqType = req.query['reqType'];
+    context.log(reqType)
     let items = await getCards()
-    context.log(items)
+    console.log(items)
 
+  
     let count = 0
 
     let names = {}
 
-    for (card in items) {
-      names[count] = 
+    for (let i = 0; i < items.length; i++) {
+      let card = items[i]
+      //console.log(card)
+      let cardName = ""
+      try {
+        cardName = card.contactName
+      } catch(err) {
+        console.log(err)
+      }
+      try {
+        cardName = cardName + ", " +  card.companyName;
+      } catch(err) {
+        console.log(err)
+      }
+      names[cardName] = count;
       count = count + 1;
-    }
-    
+      
+    };
     context.log(names)
 
+    if (reqType === 'nameList') {
+      context.log("Returning list of names");
+      body = names;
+    } else if (reqType === 'cardImage') {
+      context.log("Returning the card requested")
+      let cardName = req.quer['inputName'];
+      body = items[names[cardName]]
+    } else {
+      body = "Please input a valid request type"
+    }
 
-    const responseMessage = "";
     context.res = {
         // status: 200, /* Defaults to 200 */
-        body: responseMessage
+        body: body
     };
 }
 

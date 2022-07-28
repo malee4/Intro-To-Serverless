@@ -5,13 +5,14 @@
         <meta name="viewport" content="width=device-width">
         <title>Business Card Storer</title>
     </head>
-    <body>
         <h1>Dashboard</h1> 
         <div>
             <h2>Please select a business card to view.</h2>
             <select id="selectCard">
                 <option>Choose a card</option>
-            </select>>
+            </select>
+            <button id="refresh" type="submit" onclick="refresh();">Refresh</button>
+            <input id="findCard" value="Submit" type="submit" />
         </div>
         <div>
             <p id="contactName"></p>
@@ -21,6 +22,18 @@
             <p id="website"></p>
             <p id="fax"></p>
         </div>
+        <div>
+            <h2>Get more information from your card.</h2>
+            <input id="googleSearch" value="See Search Results" type="submit" />
+        </div>
+        <div>
+            <h2>Translate Your Card Information</h2>
+            <select id="selectLanguage">
+                <option>Select a language</option>
+            </select>
+            <input id="Translate" value="Translate" type="submit" />
+        </div>
+    </div>
         <script src="index.js" type="text/javascript"></script>
     </body>  
 

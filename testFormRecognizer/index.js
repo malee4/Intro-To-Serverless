@@ -8,7 +8,7 @@ const path = "/Users/melod/Desktop/cs/Intro-To-Serverless/testFormRecognizer/car
 const { FormRecognizerClient, AzureKeyCredential } = require("@azure/ai-form-recognizer");
 const fs = require("fs");
 const querystring = require("qs");
-
+const fetch = require("node-fetch")
 
 // // // BUSINESS CARD MODEL
 module.exports = async function (context, req) {
@@ -19,20 +19,20 @@ module.exports = async function (context, req) {
     // // testing purposes
     // const bcUrl = queryObject.MediaUrl0;
 
-    const client = new FormRecognizerClient(endpoint, new AzureKeyCredential(apiKey));
+    // const client = new FormRecognizerClient(endpoint, new AzureKeyCredential(apiKey));
 
-    bcUrl = "https://static.gotprint.com/tl/products/generic/images/business-cards/business_card_rounded_h.jpg";
-    const poller = await client.beginRecognizeBusinessCardsFromUrl(bcUrl, {
-        onProgress: (state) => {
-            console.log(`status: ${state.status}`);
-        }
-    });
+    // bcUrl = "https://static.gotprint.com/tl/products/generic/images/business-cards/business_card_rounded_h.jpg";
+    // const poller = await client.beginRecognizeBusinessCardsFromUrl(bcUrl, {
+    //     onProgress: (state) => {
+    //         console.log(`status: ${state.status}`);
+    //     }
+    // });
 
-    const [businessCard] = await poller.pollUntilDone();
+    // const [businessCard] = await poller.pollUntilDone();
 
-    if (businessCard === undefined) {
-        throw new Error("Failed to extract data from at least one business card.");
-    }
+    // if (businessCard === undefined) {
+    //     throw new Error("Failed to extract data from at least one business card.");
+    // }
 
 
     // const readStream = fs.createReadStream(path);
@@ -50,9 +50,19 @@ module.exports = async function (context, req) {
     //     throw new Error("Expecting at lease one card in analysis result");
     // }
 
+    const endpoint = "https://melodybitproj.azurewebsites.net/api/retrieveCardsFromCosmos?code=nAgyFZJbId1UKolKbNV7UC7NlvYmT3BUxNmC3Yx40aBrAzFuB6srBQ==?reqType=nameList"
+    const resp = await fetch(endpoint, {
+        "method":"GET"
+    });
+    context.log(resp)
+    const data = await resp.json();
+    context.log(data)
+    const cardNameList = Object.keys(data); // retrieve from retrieveCardsFromCosmos
+    
+
     context.res = {
         // status: 200, /* Defaults to 200 */
-        body: businessCard
+        body: cardNameList
         };
 }
 
