@@ -12,6 +12,7 @@
     "@azure/identity": "^2.1.0",
     "@azure/ms-rest-js": "^2.6.1",
     "@azure/storage-blob": "^12.10.0",
+    "axios": "^0.27.2",
     "cypress": "^8.2.0",
     "fs": "^0.0.1-security",
     "morse-code-converter": "^1.0.2",
